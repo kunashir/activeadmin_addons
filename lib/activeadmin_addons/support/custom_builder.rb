@@ -19,7 +19,9 @@ module ActiveAdminAddons
 
       ::ActiveAdmin::Views::TableFor.class_eval do
         define_method("#{builder_name}_column") do |*args, &block|
-          column(*args) { |model| builder_class.new(self, model, *args, &block).render }
+          column(*args) do |model|
+            builder_class.new(self, model, *args, &block).render
+          end
         end
       end
 

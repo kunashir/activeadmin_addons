@@ -4,7 +4,7 @@ describe "Toggle Bool Builder", type: :feature do
   context "shows corresponding switch" do
     before do
       register_index(Invoice) do
-        toggle_bool_column :active
+        toggle_bool_column :active, url: 'fake_url'
       end
     end
 
@@ -22,6 +22,12 @@ describe "Toggle Bool Builder", type: :feature do
       it "on switch is visible" do
         on_switch = find("#toggle-invoice-#{@invoice.id}-active-true")
         expect(on_switch[:class]).not_to include("hidden-switch")
+      end
+
+      it 'has url as data-url'  do
+        on_switch = find("#toggle-invoice-#{@invoice.id}-active-true")
+        off_switch = find("#toggle-invoice-#{@invoice.id}-active-false")
+        expect(off_switch['data-url']).to eq 'fake_url'
       end
     end
 

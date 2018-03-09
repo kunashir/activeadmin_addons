@@ -26,7 +26,7 @@ module ActiveAdminAddons
         'data-object_id' => model.id,
         'data-field' => attribute,
         'data-value' => value,
-        'data-url' => context.resource_path(model),
+        'data-url' => url,
         'data-success_message' => options[:success_message]
       )
     end
@@ -39,6 +39,11 @@ module ActiveAdminAddons
           cond == :if ? !result : result
         end
       end
+    end
+
+    def url
+      return context.resource_path(model) unless has_opts?
+      args.last[:url]
     end
   end
 end
