@@ -6,8 +6,8 @@ $(function() {
     var field = boolSwitch.data('field');
     var value = boolSwitch.data('value');
     var otherValue = String(value) !== 'true';
-    var switchId = boolSwitch.attr('id');
-    var otherSwitch = $('#' + switchId.substr(0, switchId.lastIndexOf('-') + 1) + otherValue);
+    var switchClass = boolSwitch.data('switch_id');
+    var otherSwitch = $('.' + switchClass.substr(0, switchClass.lastIndexOf('-') + 1) + otherValue);
     var url = boolSwitch.data('url');
     var successMessage = boolSwitch.data('success_message');
     var data = { id: objectId };
@@ -22,7 +22,7 @@ $(function() {
         alert(errorMsg);
       },
       success: function() {
-        boolSwitch.addClass('hidden-switch');
+        $('.' + switchClass).addClass('hidden-switch');
         otherSwitch.removeClass('hidden-switch');
         if (!boolSwitch.hasClass('notify-success')) return;
         $(function() {

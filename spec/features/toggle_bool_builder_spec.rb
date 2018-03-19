@@ -15,18 +15,18 @@ describe "Toggle Bool Builder", type: :feature do
       end
 
       it "off switch is hidden" do
-        off_switch = find("#toggle-invoice-#{@invoice.id}-active-false")
+        off_switch = find(".toggle-invoice-#{@invoice.id}-active-false")
         expect(off_switch[:class]).to include("hidden-switch")
       end
 
       it "on switch is visible" do
-        on_switch = find("#toggle-invoice-#{@invoice.id}-active-true")
+        on_switch = find(".toggle-invoice-#{@invoice.id}-active-true")
         expect(on_switch[:class]).not_to include("hidden-switch")
       end
 
       it 'has url as data-url'  do
-        on_switch = find("#toggle-invoice-#{@invoice.id}-active-true")
-        off_switch = find("#toggle-invoice-#{@invoice.id}-active-false")
+        on_switch = find(".toggle-invoice-#{@invoice.id}-active-true")
+        off_switch = find(".toggle-invoice-#{@invoice.id}-active-false")
         expect(off_switch['data-url']).to eq 'fake_url'
       end
     end
@@ -38,12 +38,12 @@ describe "Toggle Bool Builder", type: :feature do
       end
 
       it "off switch is visible" do
-        off_switch = find("#toggle-invoice-#{@invoice.id}-active-false")
+        off_switch = find(".toggle-invoice-#{@invoice.id}-active-false")
         expect(off_switch[:class]).not_to include("hidden-switch")
       end
 
       it "on switch is hidden" do
-        on_switch = find("#toggle-invoice-#{@invoice.id}-active-true")
+        on_switch = find(".toggle-invoice-#{@invoice.id}-active-true")
         expect(on_switch[:class]).to include("hidden-switch")
       end
     end
