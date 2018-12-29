@@ -1,6 +1,33 @@
 require 'rails_helper'
 
 describe "Toggle Bool Builder", type: :feature do
+  context "when using inside another resource" do
+    before do
+      load_resources(true) do
+        ActiveAdmin.register(Invoice)
+        ActiveAdmin.register(Category) do
+          show do
+            attributes_table do
+              row :id
+            end
+            table_for resource.invoices do
+              toggle_bool_column :active
+            end
+          end
+        end
+      end
+    end
+
+    it "generates the correct url" do
+      @category = Category.create(name: "International")
+      @invoice = create_invoice(active: true, category: @category)
+      visit admin_category_path(@category)
+
+      switch = find("span.toggle-bool-switch")
+      expect(switch["data-url"]).to eq("/admin/invoices/#{@invoice.id}")
+    end
+  end
+
   context "shows corresponding switch" do
     before do
       register_index(Invoice) do
@@ -14,20 +41,14 @@ describe "Toggle Bool Builder", type: :feature do
         visit admin_invoices_path
       end
 
-      it "off switch is hidden" do
-        off_switch = find(".toggle-invoice-#{@invoice.id}-active-false")
-        expect(off_switch[:class]).to include("hidden-switch")
+      it "generates the correct resource url" do
+        switch = find("#toggle-invoice-#{@invoice.id}-active")
+        expect(switch["data-url"]).to eq("/admin/invoices/#{@invoice.id}")
       end
 
-      it "on switch is visible" do
-        on_switch = find(".toggle-invoice-#{@invoice.id}-active-true")
-        expect(on_switch[:class]).not_to include("hidden-switch")
-      end
-
-      it 'has url as data-url'  do
-        on_switch = find(".toggle-invoice-#{@invoice.id}-active-true")
-        off_switch = find(".toggle-invoice-#{@invoice.id}-active-false")
-        expect(off_switch['data-url']).to eq 'fake_url'
+      it "switch is on" do
+        switch = find("#toggle-invoice-#{@invoice.id}-active")
+        expect(switch[:class]).to include("on")
       end
     end
 
@@ -37,14 +58,9 @@ describe "Toggle Bool Builder", type: :feature do
         visit admin_invoices_path
       end
 
-      it "off switch is visible" do
-        off_switch = find(".toggle-invoice-#{@invoice.id}-active-false")
-        expect(off_switch[:class]).not_to include("hidden-switch")
-      end
-
-      it "on switch is hidden" do
-        on_switch = find(".toggle-invoice-#{@invoice.id}-active-true")
-        expect(on_switch[:class]).to include("hidden-switch")
+      it "switch is off" do
+        switch = find("#toggle-invoice-#{@invoice.id}-active")
+        expect(switch[:class]).not_to include("on")
       end
     end
   end

@@ -1,36 +1,40 @@
-$(function() {
+var initializer = function() {
   $('.toggle-bool-switch').click(function(e) {
     var boolSwitch = $(e.target);
-    var model = boolSwitch.data('model');
+
     var objectId = boolSwitch.data('object_id');
+    var model = boolSwitch.data('model');
     var field = boolSwitch.data('field');
-    var value = boolSwitch.data('value');
-    var otherValue = String(value) !== 'true';
-    var switchClass = boolSwitch.data('switch_id');
-    var otherSwitch = $('.' + switchClass.substr(0, switchClass.lastIndexOf('-') + 1) + otherValue);
+
     var url = boolSwitch.data('url');
+    var value = boolSwitch.data('value');
     var successMessage = boolSwitch.data('success_message');
     var data = { id: objectId };
+    var switchClass = "." + boolSwitch.data('switch_id');
     data[model] = {};
-    data[model][field] = otherValue;
+    data[model][field] = !value;
+
     $.ajax({
       url: url,
       data: data,
       dataType: 'json',
-      error: function() {
-        var errorMsg = 'Error: Update Unsuccessful';
+      headers : {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+      error: function(data) {
+        var errorMsg = data.responseText || 'Error: Update Unsuccessful';
         alert(errorMsg);
       },
       success: function() {
-        $('.' + switchClass).addClass('hidden-switch');
-        otherSwitch.removeClass('hidden-switch');
+        $(switchClass).data('value', !value);
+        $(switchClass).toggleClass('on');
         if (!boolSwitch.hasClass('notify-success')) return;
         $(function() {
-          var successMsg = 'Update Successful!';
           setTimeout(alert(successMessage), 500);
         });
       },
       type: 'PATCH',
     });
   });
-});
+};
+
+$(initializer);
+$(document).on('turbolinks:load', initializer);
